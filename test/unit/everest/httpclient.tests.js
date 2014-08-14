@@ -306,6 +306,7 @@ define(["everest/constants", "everest/system", "everest/httpclient"], function (
 
                     request = jasmine.Ajax.requests.mostRecent();
                     expect(request.url).toBe(baseUrl + '?paramTest=value');
+                    console.log("URL : " + system.serialize(request,2));
                     expect(request.method).toBe(httpVerbs.GET);
                     expect(request.requestHeaders).toBeDefined();
                     expect(validateHeadersFromConfiguration(client._configuration, request.requestHeaders)).toBe(true);

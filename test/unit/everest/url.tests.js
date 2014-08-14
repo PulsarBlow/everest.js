@@ -7,7 +7,6 @@ define(["everest/url"], function (URL) {
 
         it ("should parse properly", function () {
             var url = new URL("https://foo:bar@github.com:2014/PulsarBlow/12345678?foo=bar#test");
-
             expect(url.protocol).toBe("https:");
             expect(url.hostname).toBe("github.com");
             expect(url.port).toBe("2014");
