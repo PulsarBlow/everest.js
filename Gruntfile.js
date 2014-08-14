@@ -9,7 +9,6 @@ module.exports = function (grunt) {
         },
         jasmine: {
             travis: {
-                //src: 'lib/**/*.js',
                 options: {
                     vendor: [
                         "bower_components/jasmine-ajax/lib/mock-ajax.js"
