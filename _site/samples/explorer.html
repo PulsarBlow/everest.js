@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>REST API Explorer - EverestJs samples</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css" rel="stylesheet">
+
+    <script>
+        var require = {
+            paths: {
+                "jquery": "../bower_components/jquery/dist/jquery",
+                "knockout": "http://oss.maxcdn.com/knockout/3.1.0/knockout",
+                "everest": "../dist/everest"
+            }
+        };
+    </script>
+    <script data-main="explorer" src="../bower_components/requirejs/require.js"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+    <h1>REST API Explorer <small>EverestJs samples</small></h1>
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-8">
+            <div role="form">
+                <div class="form-group">
+                    <label for="baseUrl">Api BaseUrl</label>
+                    <input type="text" class="form-control" id="baseUrl" placeholder="Enter your table storage endpoint" data-bind="value: options.baseUrl">
+                </div>
+                <div class="form-group">
+                    <label for="account">Storage Account</label>
+                    <input type="text" class="form-control" id="account" placeholder="Enter your storage account">
+                </div>
+                <div class="form-group">
+                    <label for="sharedKey">Storage SharedKey</label>
+                    <input type="password" class="form-control" id="sharedKey" placeholder="Enter your storage shared key">
+                </div>
+                <button type="button" class="btn btn-default" data-bind="click: requestApi">Execute</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

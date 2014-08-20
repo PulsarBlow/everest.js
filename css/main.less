@@ -1,0 +1,157 @@
+@import "variables";
+@import "mixins";
+@import "fonts";
+@import "typo";
+@import "buttons";
+@import "syntax";
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  //.base-font;
+  margin-bottom: @footer-height;
+  &.home {
+    color: @color-theme-4;
+    background-color: @color-theme-1;
+  }
+}
+
+a {
+  color: @color-theme-2;
+  &:hover, &:active, &:focus, &:visited {
+    color: @color-theme-2;
+  }
+}
+
+// Header
+header {
+  z-index: 1000;
+  position: relative;
+  width: 100%;
+
+  .navbar {
+    margin: 0;
+  }
+
+  // Navigation
+  .navbar-default {
+    border: none;
+    border-radius: 0;
+    background-color: @color-theme-2;
+    color: @color-theme-1;
+
+    .navbar-brand, .navbar-nav > li > a {
+      font-size: 1.25em;
+      color: @color-theme-1;
+
+      &:hover, &:focus {
+        color: @color-theme-4;
+      }
+
+    }
+
+    .navbar-brand {
+      .open-font;
+      font-weight: 600;
+    }
+  }
+}
+
+// Footer
+footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: @footer-height;
+
+  text-align: center;
+
+  .footer-text {
+    margin-top: 1em;
+    .center-block;
+  }
+
+  ul {
+    li {
+      display: inline;
+      padding-right: 3px;
+      padding-left: 3px;
+    }
+  }
+}
+
+svg.logo {
+  .mountain {
+    fill: @color-theme-3;
+  }
+  .pike {
+    fill: @color-theme-5;
+  }
+}
+
+// Jumbotron
+.jumbotron {
+  background-color: @color-theme-1;
+  text-align: center;
+
+  h1, h2, h3, h4, h5 {
+    color: @color-theme-5;
+  }
+
+  .btn-group {
+    margin-top: 2em;
+  }
+}
+
+// Ribbons
+.ribbon {
+  &.ribbon-primary {
+    background-color: @color-theme-3;
+    color: @color-theme-4;
+  }
+  &.ribbon-secondary {
+    background-color: @color-theme-2;
+    color: @color-theme-1;
+  }
+  &.ribbon-ternary {
+    background-color: @color-theme-1;
+    color: @color-theme-3;
+  }
+}
+
+// Page
+.page {
+  .page-header {
+    margin: 0;
+    padding: 3em 0 2em 0;
+    background-color: @color-theme-1;
+    color: @color-theme-5;
+
+    .page-title {
+      margin: 0;
+      padding: 0;
+      color: @color-theme-3;
+    }
+
+    .lead {
+      color: @color-theme-4;
+    }
+  }
+
+  .page-content {
+    padding: 2em 0;
+  }
+}
+
+// Misc.
+// Browse happy
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}

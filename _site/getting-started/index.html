@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Getting started &sdot; Everest.js</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
+    <link href='http://fonts.googleapis.com/css?family=Spinnaker&subset=latin,latin-ext' rel='stylesheet'
+          type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Teko:300,400,500,600,700' rel='stylesheet' type='text/css'>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="">
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<header>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">EVEREST.JS</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/getting-started">Getting started</a></li>
+                    <!--<li><a href="#">Documentation</a></li>-->
+                    <li><a href="https://github.com/PulsarBlow/everestjs"><i class="fa fa-github"></i> GitHub project</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="page">
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Getting started</h1>
+            <p class="lead">Once you've downloaded Everest, here's what to do next.</p>
+        </div>
+    </section>
+    <section class="page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>Quick start</h1>
+                    <p class="lead">Quickly get up and running with Everest</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h2>Everest.min.js</h2>
+                            <p>Compiled and minified JavaScript. No docs or original source files are included.</p>
+                            <div class="">
+                                <a href="#" class="btn btn-lg btn-block btn-primary" data-bind="attr: { href: everest.download_url}"><i class="fa fa-download"></i> Download Everest</a>
+                            </div>
+                            <h6 class="">Currently <strong>v<span data-bind="text: everest.version">0.0.0</span></strong></h6>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h2>Source code</h2>
+                            <p>If you haven't already, download the source code for Everest.</p>
+                            <div class="">
+                                <a href="#" class="btn btn-lg btn-block btn-primary" data-bind="attr: { href: everest.sourcecode_url}"><i class="fa fa-download"></i> Source code</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+
+<footer>
+    <div class="container">
+        <p class="footer-text">Code licensed under the <a href="https://github.com/PulsarBlow/everestjs/blob/master/LICENCE.txt">MIT Licence</a> and the docs are licenced under <a href="https://github.com/PulsarBlow/everestjs/blob/gh-pages/LICENCE.txt">CC BY 4.0</a>. Engineered with <span class="text-color-theme-3">&hearts;</span> by <a href="https://github.com/PulsarBlow">PulsarBlow</a></p>
+        <ul>
+            <li>Currently v<span data-bind="text: everest.version">0.0.0</span></li>
+            <li>&sdot;</li>
+            <li><a href="https://github.com/PulsarBlow/everestjs/issues">Issues</a></li>
+            <li>&sdot;</li>
+            <li><a href="https://github.com/PulsarBlow/everestjs/releases">Releases</a></li>
+        </ul>
+    </div>
+</footer>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//oss.maxcdn.com/knockout/3.1.0/knockout.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="/bower_components/everest/dist/everest.min.js"></script>
+<script src="/js/main.js"></script>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-41236726-4', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>
