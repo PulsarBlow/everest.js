@@ -10,12 +10,12 @@
         "globals"
     ],
     "license": "MIT",
-    "homepage": "https://github.com/PulsarBlow/everestjs",
+    "homepage": "https://PulsarBlow.github.io/everest.js",
     "repository": {
         "type": "git",
-        "url": "git://github.com/PulsarBlow/everestjs.git"
+        "url": "git://github.com/PulsarBlow/everest.js"
     },
-    "bugs": "https://github.com/PulsarBlow/everestjs/issues",
+    "bugs": "https://github.com/PulsarBlow/everest.js/issues",
     "private": false,
     "ignore": [
         "**/.*",
