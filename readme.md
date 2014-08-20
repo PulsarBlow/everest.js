@@ -51,9 +51,9 @@ It is built on top of jQuery and thus requires the reference to the jquery libra
 If you want to use Everest as an AMD mobule, see the section below.
 
 ```javascript
-var restClient = new ê.RestClient({
+var restClient = ê.createRestClient({
   host: "api.github.com",
-  useSSL: true
+  useSSL: true // required by github api
 });
 
 restClient.read("/repos/PulsarBlow/everestjs")
@@ -85,8 +85,9 @@ You can also use Everest as an AMD module (with [RequireJS](http://requirejs.org
 define(["everest"], function(ê) {
   "use strict";
   
-  var restClient = ê.RestClient({
-    baseUrl: "api.github.com"
+  var restClient = ê.createRestClient({
+    baseUrl: "api.github.com",
+    useSSL: true // required by github api
   });
   
   restClient.read("/repos/PulsarBlow/everestjs")
