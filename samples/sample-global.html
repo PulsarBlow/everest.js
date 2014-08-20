@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Simple Global - Everest.js Samples</title>
+    <title>Global variable sample - Everest.js</title>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/lumen/bootstrap.min.css" rel="stylesheet">
@@ -18,46 +18,35 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Everest.js</a>
+            <a class="navbar-brand" href="https://pulsarblow.github.io/everest.js">Everest.js samples</a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="/get-started.html">Get Started</a></li>
-                <li><a href="/download.html">Download</a></li>
-                <li><a href="/documentation.html">Documentation</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Samples <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="/samples">Samples</a></li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="/samples/simple-global.html">Simple Global</a></li>
-                        <li><a href="/samples/simple-amd.html">Simple AMD</a></li>
-                        <li><a href="/samples/explorer.html">RESTAPI Explorer</a></li>
-                    </ul>
-                </li>
+                <li class="active"><a href="sample-global.html">Global variable</a></li>
+                <li><a href="sample-amd.html">AMD module</a></li>
+                <li><a href="explorer.html">RESTAPI Explorer</a></li>
             </ul>
-        </div><!-- /.navbar-collapse -->
+        </div>
     </div>
 </nav>
 <div class="container">
-    <h1 class="page-header">Simple Global
+    <h1 class="page-header">Everest - Global variable
         <small>Everest.js samples</small>
     </h1>
     <div class="row">
         <div class="col-md-6">
             <div role="form">
                 <div class="form-group">
-                    <label for="baseUrl">Api BaseUrl</label>
-                    <input type="text" class="form-control" id="baseUrl" placeholder="Enter your table storage endpoint"
-                           data-bind="value: baseUrl">
+                    <label for="host">Api Host</label>
+                    <input type="text" class="form-control" id="host" placeholder="eg. api.github.com"
+                           data-bind="value: host">
                 </div>
                 <div class="form-group">
                     <label for="resourcePath">Resource Path</label>
-                    <input type="text" class="form-control" id="resourcePath" placeholder="Enter your storage account"
+                    <input type="text" class="form-control" id="resourcePath" placeholder="eg. /repos/PulsarBlow/everest.js"
                            data-bind="value: resourcePath">
                 </div>
-                <button type="button" class="btn btn-primary" data-bind="click: readResource">Execute</button>
+                <button type="button" class="btn btn-primary" data-bind="enable: canPost, click: readResource" disabled>Execute</button>
                 <i id="loader" class="fa fa-refresh fa-spin hidden"></i>
             </div>
             <pre class="pre-scrollable highlight" style="margin-top:20px;height:250px;" data-bind="text: result"></pre>
@@ -71,13 +60,13 @@
             <p>In that configuration, Everest exports itself as a global variable : <code>window.everest</code> or
                 <code>window.ê</code></p>
 
-            <p>EverestJs is also usable as an AMD-module (with a module loader like <a href="http://requirejs.org">require.js</a>).
-                Check the <a href="simple-amd.html">Simple AMD</a> sample to see how it works.</p>
+            <p class="alert alert-info">EverestJs is also usable as an AMD-module (with a module loader like <a href="http://requirejs.org">require.js</a>).<br />
+                Check the <a href="sample-amd.html">AMD sample</a> to see how it works.</p>
 
             <h3>What this sample demonstrates ?</h3>
 
-            <p>This sample triggers a call to the github api after instantiating a new RestApi client. The call result
-                is displayed in the panel below.</p>
+            <p>This sample triggers a call to the github api after instantiating a new Rest client. The call result
+                is displayed in the panel under the form.</p>
 
             <p>Open your browser javascript console and check the source to see what is going on under the hood.</p>
             <ul>
@@ -96,25 +85,28 @@
 <script src="../dist/everest.min.js"></script>
 <script>
     (function ($, ko, ê) {
-        var defaultBaseUrl = "https://api.github.com",
-                defaultResourcePath = "/repos/PulsarBlow/everestjs",
+        var host = "api.github.com",
+                defaultResourcePath = "/repos/PulsarBlow/everest.js",
                 $loader,
-                restApi = new ê.RestApiClient({
-                    baseUrl: defaultBaseUrl,
-                    useCache: true
+                restApi = new ê.RestClient({
+                    host: host,
+                    useSSL: true     // Set SSL on because github requires it
                 });
 
         function ViewModel() {
-            this.baseUrl = ko.observable(defaultBaseUrl);
+            this.host = ko.observable(host);
             this.resourcePath = ko.observable(defaultResourcePath);
             this.result = ko.observable("");
+            this.canPost = ko.computed(function(){
+                return this.host() && this.resourcePath()
+            }, this);
         }
 
         ViewModel.prototype.readResource = function () {
             var that = this;
 
-            // Reset the baseUrl (in case your changed it in the input field)
-            restApi.setConfiguration({baseUrl: that.baseUrl()});
+            // Reset the host (in case your changed it in the input field)
+            restApi.setConfiguration({host: that.host()});
 
             // Triggers the read and handles the outcome
             $loader.removeClass("hidden");
@@ -122,6 +114,8 @@
                     .done(function (data) {
                         that.result(JSON.stringify(data));
                         console.log("ResApiClient read success", data);
+
+                        // Highlight response
                         $('pre.highlight').each(function (i, block) {
                             hljs.highlightBlock(block);
                         });
@@ -140,7 +134,6 @@
             // Databinds the viewModel. Just some Knockout stuff here, nothing related
             // to EverestJs
             ko.applyBindings(new ViewModel());
-            // Highlight code
 
         });
     })(window.jQuery = window.jQuery || {}, window.ko = window.ko || {}, window.ê = window.ê || {});

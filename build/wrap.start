@@ -1,6 +1,6 @@
 /*!
  * Everest JS - A REST Api client for the browser.
- * Version 1.0.0-alpha
+ * Version, see : everest.system.version
  * http://github.com/PulsarBlow/EverestJs
  */
 (function (root, factory) {

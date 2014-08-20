@@ -1,6 +1,6 @@
 /*!
  * Everest JS - A REST Api client for the browser.
- * Version 1.0.0-alpha
+ * Version, see : everest.system.version
  * http://github.com/PulsarBlow/EverestJs
  */
 (function (root, factory) {
@@ -56,7 +56,7 @@ var requirejs, require, define;
         if (name && name.charAt(0) === ".") {
             //If have a base name, try to normalize against it,
             //otherwise, assume it is a top-level require that will
-            //be relative to baseUrl in the end.
+            //be relative to host in the end.
             if (baseName) {
                 //Convert baseName to array, and lop off the last part,
                 //so that . matches that "directory" and not name of the baseName's
@@ -100,7 +100,7 @@ var requirejs, require, define;
                 name = name.join("/");
             } else if (name.indexOf('./') === 0) {
                 // No baseName, so this is ID is resolved relative
-                // to baseUrl, pull off the leading dot.
+                // to host, pull off the leading dot.
                 name = name.substring(2);
             }
         }
@@ -477,7 +477,8 @@ define('everest/constants',[],function () {
                 USER_AGENT: "User-Agent",
                 ACCEPT: "Accept",
                 ACCEPT_CHARSET: "Accept-Charset",
-                HOST: "Host"
+                HOST: "Host",
+                RANGE: "Range"
             },
 
             verbs: {
@@ -486,7 +487,8 @@ define('everest/constants',[],function () {
                 PUT: "PUT",
                 DELETE: "DELETE",
                 HEAD: "HEAD",
-                MERGE: "MERGE"
+                MERGE: "MERGE",
+                PATCH: "PATCH"
             },
 
             statusCodes: {
@@ -534,6 +536,15 @@ define('everest/constants',[],function () {
                  */
                 NO_STORE: "no-store"
             }
+        },
+
+        everest: {
+            environments: {
+                DEBUG: "DEBUG",
+                RELEASE: "RELEASE"
+            },
+            USERAGENT_HEADER: "X-Alt-User-Agent",
+            USERAGENT_HEADER_FORMAT: "Everest.js/? (+https://github.com/PulsarBlow/everest.js)"
         }
     };
 
@@ -623,7 +634,6 @@ define('everest/system',["jquery", "everest/constants"], function ($, constants)
         // empty object ?
         if (isObject(value)) {
             for (var key in value) {
-                console.log(key);
                 if (value.hasOwnProperty(key)) {
                     return false;
                 }
@@ -808,10 +818,9 @@ define('everest/system',["jquery", "everest/constants"], function ($, constants)
 
     /**
      * Determines if a string starts with another.
-     *
      * @param {string}       text      The string to assert.
      * @param {string}       prefix    The string prefix.
-     * @return {Bool} True if the string starts with the prefix; false otherwise.
+     * @return {bool} True if the string starts with the prefix; false otherwise.
      */
     function stringStartsWith(text, prefix) {
         if (isEmpty(prefix)) {
@@ -823,10 +832,9 @@ define('everest/system',["jquery", "everest/constants"], function ($, constants)
 
     /**
      * Determines if a string ends with another.
-     *
      * @param {string}       text      The string to assert.
      * @param {string}       suffix    The string suffix.
-     * @return {Bool} True if the string ends with the suffix; false otherwise.
+     * @return {bool} True if the string ends with the suffix; false otherwise.
      */
     function stringEndsWith(text, suffix) {
         if (isEmpty(suffix)) {
@@ -836,8 +844,43 @@ define('everest/system',["jquery", "everest/constants"], function ($, constants)
         return text.substr(text.length - suffix.length) === suffix;
     }
 
-    var version = "1.0.0-alpha";
+    /**
+     * Determines if a string contains the given pattern
+     * @param {string} value The value where to search for the pattern
+     * @param {string} pattern The pattern which should be look up for
+     * @return {bool} True if the value contains the pattern
+     */
+    function stringContains(value, pattern) {
+        if(isEmpty(value) || isEmpty(pattern)) {
+            return false;
+        }
 
+        return value.indexOf(pattern) !== -1;
+    }
+
+    /**
+     * Serializes an object into a string
+     * @param obj
+     * @param indent
+     * @returns {string} The string representation of the serialized object
+     */
+    function serialize(obj, indent) {
+        if(!indent) { indent = 4; }
+        return JSON.stringify(obj, null, indent);
+    }
+
+    /**
+     * The current version of Everest.js
+     * @type {string}
+     */
+    var version = "1.1.0-alpha";
+
+    /**
+     * Returns the current environment
+     * @type {string}
+     */
+    var environment = constants.everest.environments.RELEASE;
+    
     var uuid = {
         newUuid: function () {
             /* jshint -W016 */
@@ -856,20 +899,56 @@ define('everest/system',["jquery", "everest/constants"], function ($, constants)
 
     var system = {
 
+        /**
+         * Returns the current environment
+         */
+        environment: environment,
+
+        /**
+         * Returns the current version of Everest.js
+         */
         version: version,
 
+        noop: function() {},
+
+        /**
+         * Returns a new deferred object
+         * @returns {*}
+         */
         deferred: function () {
             return $.Deferred();
         },
 
+        /**
+         * UUID
+         */
         uuid: uuid,
 
+        /**
+         * Guards
+         */
         guard: {
+
+            /**
+             * Ensures that the given argument value is not null,
+             * otherwise throws an error
+             * @param {*} argValue The argument value
+             * @param {string} argName The argument name, to be used in error message
+             * @throws {Error} Throws an error if the guarded condition is not respected
+             */
             argumentNotNull: function (argValue, argName) {
                 if (isUndefinedOrNull(argValue)) {
                     throw new Error(stringFormat("ArgumentNull exception : ? is null", argName));
                 }
             },
+
+            /**
+             * Ensures that the given argument value is not null or empty,
+             * otherwise throws an error
+             * @param {*} argValue The argument value
+             * @param {string} argName The argument name, to be used in error message
+             * @throws {Error} Throws an error if the guarded condition is not respected
+             */
             argumentNotNullOrEmpty: function (argValue, argName) {
                 var message = stringFormat("ArgumentNull exception : ? is null or empty", argName);
                 if (isUndefinedOrNull(argValue)) {
@@ -882,21 +961,53 @@ define('everest/system',["jquery", "everest/constants"], function ($, constants)
                     throw new Error(message);
                 }
             },
-            argumentIsNumber: function (argValue, argName) {
+
+            /**
+             * Ensures that the given argument value is a numeric,
+             * otherwise throws an error
+             * @param {*} argValue The argument value
+             * @param {string} argName The argument name, to be used in error message
+             * @throws {Error} Throws an error if the guarded condition is not respected
+             */
+            argumentIsNumeric: function (argValue, argName) {
                 if (!isNumeric(argValue)) {
                     throw new Error(stringFormat("Argument exception : ? is not a number", argName));
                 }
             },
-            argumentIsOptionalNumber: function (argValue, argName) {
+
+            /**
+             * Ensures that the given argument value is numeric or undefined,
+             * otherwise throws an error
+             * @param {*} argValue The argument value
+             * @param {string} argName The argument name, to be used in error message
+             * @throws {Error} Throws an error if the guarded condition is not respected
+             */
+            argumentIsNumericOrUndefined: function (argValue, argName) {
                 if (!isUndefined(argValue) && !isNumeric(argValue)) {
                     throw new Error(stringFormat("Argument exception : ? is not an optional number", argName));
                 }
             },
+
+            /**
+             * Ensures that the given argument value is a function,
+             * otherwise throws an error
+             * @param {*} argValue The argument value
+             * @param {string} argName The argument name, to be used in error message
+             * @throws {Error} Throws an error if the guarded condition is not respected
+             */
             argumentIsFunction: function (argValue, argName) {
                 if (!isFunction(argValue)) {
                     throw new Error(stringFormat("Argument exception : ? is not a function", argName));
                 }
             },
+
+            /**
+             * Ensures that the given argument value is defined,
+             * otherwise throws an error
+             * @param {*} argValue The argument value
+             * @param {string} argName The argument name, to be used in error message
+             * @throws {Error} Throws an error if the guarded condition is not respected
+             */
             argumentIsDefined: function (argValue, argName) {
                 if (isUndefined(argValue)) {
                     throw new Error(stringFormat("Argument exception : ? is undefined", argName));
@@ -904,53 +1015,275 @@ define('everest/system',["jquery", "everest/constants"], function ($, constants)
             }
         },
 
+        /**
+         * Returns true if the given value is a number
+         * @param value
+         * @returns {boolean}
+         */
         isNumeric: isNumeric,
+
+        /**
+         * Checks if a value is null
+         *
+         * @param {object} value The value to check for null or undefined.
+         * @return {bool} True if the value is null or undefined, false otherwise.
+         */
         isNull: isNull,
+
+        /**
+         * Checks if a value is undefined
+         * @param value
+         * @returns {Boolean|boolean}
+         */
         isUndefined: isUndefined,
+
+        /**
+         * Checks if a value is null or undefined.
+         * @param value
+         * @returns {Boolean|boolean}
+         */
         isUndefinedOrNull: isUndefinedOrNull,
+
+        /**
+         * Checks if an value is empty.
+         * An empty array is length = 0
+         * An empty object has no own properties
+         * @param {object} value The object to check if it is null.
+         * @return {bool} True if the object is empty, false otherwise.
+         */
         isEmpty: isEmpty,
+
+        /**
+         * Checks if a value is an object. Note that Javascript arrays and functions are objects,
+         * while (normal) strings and numbers are not.
+         * @param value
+         * @returns {Boolean|boolean}
+         */
         isObject: isObject,
+
+        /**
+         * Checks if a value is an array.
+         * @param value
+         * @returns {Boolean|boolean}
+         */
         isArray: isArray,
+
+        /**
+         * Determines if an value contains an integer number.
+         *
+         * @param {object}  value  The object to assert.
+         * @return {bool} True if the object contains an integer number; false otherwise.
+         */
         isInt: isInt,
+
+        /**
+         * Determines if a value is a boolean.
+         * @param value
+         * @returns {Boolean|boolean} True if the value is a boolean; false otherwise.
+         */
         isBoolean: isBoolean,
+
+        /**
+         * Checks if an object is a string.
+         *
+         * @param {object} value The object to check if it is a string.
+         * @return {bool} True if the object is a string, false otherwise.
+         */
         isString: isString,
+
+        /**
+         * Check if an object is a function
+         * @param {object} value The object to check whether it is function
+         * @return {bool} True if the specified object is function, otherwise false
+         */
         isFunction: isFunction,
+
+        /**
+         * Encodes an URI.
+         * @param {string} uri The URI to be encoded.
+         * @return {string} The encoded URI.
+         */
         encodeUri: encodeUri,
+
+        /**
+         * Returns the number of keys (properties) in an object.
+         * @param {object} value The object which keys are to be counted.
+         * @return {number} The number of keys in the object.
+         */
         objectKeysLength: objectKeysLength,
+
+        /**
+         * Returns the name of the first property in an object.
+         *
+         * @param {object} value The object which key is to be returned.
+         * @return {number} The name of the first key in the object.
+         */
         objectFirstKey: objectFirstKey,
+
+        /**
+         * Checks if a value is an empty string (literally).
+         *
+         * @param {object} value The value to check for an empty string, null or undefined.
+         * @return {bool} True if the value is an empty string, null or undefined, false otherwise.
+         */
         stringIsEmpty: stringIsEmpty,
+
+        /**
+         * Formats a text replacing '?' by the arguments.
+         * @param {string}       text      The string where the ? should be replaced.
+         * @param {array}        arguments Value(s) to insert in question mark (?) parameters.
+         * @return {string}
+         */
         stringFormat: stringFormat,
-        stringTrim: stringTrim,
+
+        /**
+         * Trims the pattern from the beginning of a string
+         * @param {string} text The string where to search and replace
+         * @param {string} pattern The pattern to look up
+         * @returns {string} The cleaned-up string
+         */
         stringTrimStart: stringTrimStart,
+
+        /**
+         * Trims the pattern from the end of a string
+         * @param {string} text The string where to search and replace
+         * @param {string} pattern The pattern to look up
+         * @returns {string} The cleaned-up string
+         */
         stringTrimEnd: stringTrimEnd,
+
+        /**
+         * Trim the pattern from the beginning and the end of a string
+         * @param {string} text The string where to search and replace
+         * @param {string} pattern The pattern to look up
+         * @returns {string} The cleaned-up string
+         */
+        stringTrim: stringTrim,
+
+        /**
+         * Determines if a string starts with another.
+         * @param {string}       text      The string to assert.
+         * @param {string}       prefix    The string prefix.
+         * @return {bool} True if the string starts with the prefix; false otherwise.
+         */
         stringStartsWith: stringStartsWith,
-        stringEndsWith: stringEndsWith
+
+        /**
+         * Determines if a string ends with another.
+         * @param {string}       text      The string to assert.
+         * @param {string}       suffix    The string suffix.
+         * @return {bool} True if the string ends with the suffix; false otherwise.
+         */
+        stringEndsWith: stringEndsWith,
+
+        /**
+         * Determines if a string contains the given pattern
+         * @param {string} value The value where to search for the pattern
+         * @param {string} pattern The pattern which should be look up for
+         * @return {bool} True if the value contains the pattern
+         */
+        stringContains: stringContains,
+
+        /**
+         * Serializes an object into a string
+         * @param obj
+         * @param indent
+         * @returns {string} The string representation of the serialized object
+         */
+        serialize: serialize,
+
+        /**
+         * Returns true if the current environment is DEBUG
+         * @returns {boolean} True if the current environment is DEBUG
+         */
+        isDebug: function() {
+            return environment === constants.everest.environments.DEBUG;
+        }
     };
 
     return system;
 });
-define('everest/url',[],function() {
+define('everest/url',[],function () {
+    
+
+    /**
+     * For parsing query params out
+     * @type {RegExp}
+     */
+    var queryParser = /(?:^|&)([^&=]*)=?([^&]*)/g;
+
+    /**
+     * For parsing a url into component parts
+     * there are other parts which are suppressed (?:) but we only want to represent what would be available
+     *  from `(new URL(urlstring))` in this api.
+     *
+     * @type {RegExp}
+     */
+    var uriParser = /^(?:(?:(([^:\/#\?]+:)?(?:(?:\/\/)(?:(?:(?:([^:@\/#\?]+)(?:\:([^:@\/#\?]*))?)@)?(([^:\/#\?\]\[]+|\[[^\/\]@#?]+\])(?:\:([0-9]+))?))?)?)?((?:\/?(?:[^\/\?#]+\/+)*)(?:[^\?#]*)))?(\?[^#]+)?)(#.*)?/;
+    var keys = [
+        "href",                    // http://user:pass@host.com:81/directory/file.ext?query=1#anchor
+        "origin",                  // http://user:pass@host.com:81
+        "protocol",                // http:
+        "username",                // user
+        "password",                // pass
+        "host",                    // host.com:81
+        "hostname",                // host.com
+        "port",                    // 81
+        "pathname",                // /directory/file.ext
+        "search",                  // ?query=1
+        "hash"                     // #anchor
+    ];
+
+
+    /**
+     * Create a new Url instance from the given uri
+     *
+     * @param {string} uri The uri to parse
+     * @returns {{
+     *   href:string,
+     *   origin:string,
+     *   protocol:string,
+     *   username:string,
+     *   password:string,
+     *   host:string,
+     *   hostname:string,
+     *   port:string,
+     *   path:string,
+     *   search:string,
+     *   hash:string,
+     *   params:{}
+     * }}
+     */
     function URL(uri) {
-        var parser = document.createElement('a');
-        parser.href = uri;
 
-        this.protocol = parser.protocol;
-        this.hostname = parser.hostname;
-        this.port = parser.port;
-        this.pathname = parser.pathname;
-        this.search = parser.search;
-        this.hash = parser.hash;
-        this.host = parser.host;
-        this.username = parser.username;
-        this.password = parser.password;
+        var that = this,
+            matches = uriParser.exec(uri),
+            i = keys.length;
+
+        while (i--) {
+            that[keys[i]] = matches[i] || '';
+        }
+
+        that.params = {};
+        var query = that.search ? that.search.substring(that.search.indexOf('?') + 1) : '';
+        query.replace(queryParser, function ($0, $1, $2) {
+            if ($1) {
+                that.params[$1] = $2;
+            }
+        });
+
+        that.url = uri;
     }
 
-    // use native if it exists; otherwise use the shim
-    if(window.URL) {
-        return window.URL;
-    } else {
-        return URL;
-    }
+    /**
+     * Returns the string representation of this Url object
+     * @returns {*|URL.url}
+     */
+    URL.prototype.toString = function() {
+      return this.url;
+    };
+
+    return URL;
 });
 define('everest/httpclient',[
     "jquery",
@@ -988,7 +1321,7 @@ define('everest/httpclient',[
             /**
              * Specifies whether GET and HEAD request should be cached
              */
-            cache: false,
+            cache: true,
             /**
              * All request will be made over HTTPS only
              */
@@ -1018,22 +1351,13 @@ define('everest/httpclient',[
         return system.stringFormat("?; charset=?", contentType, charset);
     }
 
-    function formatUrl(url, strictSSL) {
+    function formatUrl(uri, strictSSL) {
         if(!strictSSL) {
-            return url;
+            return uri;
         }
-        var url = new URL(url);
+        var url = new URL(uri);
         url.protocol = constants.protocols.HTTPS;
         return url.toString();
-    }
-    
-    function createAjaxOptions(httpServiceConfiguration) {
-        return {
-            contentType: formatContentType(
-                httpServiceConfiguration.contentType,
-                httpServiceConfiguration.charset),
-            accepts: httpServiceConfiguration.accept
-        }
     }
 
     function createHeadersFromConfiguration(configuration, existingHeaders) {
@@ -1068,70 +1392,183 @@ define('everest/httpclient',[
 
     /**
      * Defines an HttpClient constructor function
-     * @param configuration
+     * @param {Object} [configuration] - The HttpClient configuration
      * @constructor
      */
     function HttpClient(configuration) {
+        this._query = {};
+        this._headers = {};
+
+        // TODO: Find a clean way to add the header if the preflight request allow any headers
+        //this._headers[constants.everest.USERAGENT_HEADER] = system.stringFormat(constants.everest.USERAGENT_HEADER_FORMAT, system.version);
         this._configuration = $.extend({}, defaultConfiguration, configuration);
     }
 
+    /**
+     * Adds one query string parameter to the client which will be appended to each request executions
+     * @param {string} name - Query string parameter name
+     * @param {string|Number} value - Query string parameter value
+     * @returns {HttpClient} - Returns the current HttpClient instance, allowing expression chaining.
+     */
+    HttpClient.prototype.withQueryStringParam = function(name, value) {
+        if(system.isEmpty(name)) {
+            return this;
+        }
+        if(!this._query) {
+            this._query = {};
+        }
+        this._query[name] = value;
+
+        return this;
+    };
+
+    /**
+     * Adds a set of query string parameters to the client which will be appended to each request executions
+     * @param {Object} params - An object containing the key/value pairs to add
+     */
+    HttpClient.prototype.withQueryStringParams = function(params) {
+        if(system.isEmpty(params)) {
+            return this;
+        }
+        if(!this._query) {
+            this._query = {};
+        }
+
+        this._query = $.extend({}, this._query, params);
+
+        return this;
+    };
+
+    /**
+     * Adds one header to the client which will be appended to each request executions
+     * @param {string} name - Header name
+     * @param {string|Number} value - Header value
+     * @returns {HttpClient} - Returns the current HttpClient instance, allowing expression chaining.
+     */
+    HttpClient.prototype.withHeader = function(name, value) {
+        if(system.isEmpty(name)) {
+            return this;
+        }
+        if(!this._headers) {
+            this._headers = {};
+        }
+        this._headers[name] = value;
+
+        return this;
+    };
+
+    /**
+     * Adds a set of headers to the client which will be appended to each request executions
+     * @param {Object} headers - An object containing the key/value pairs to add
+     */
+    HttpClient.prototype.withHeaders = function(headers) {
+        if(system.isEmpty(headers)) {
+            return this;
+        }
+        if(!this._headers) {
+            this._headers = {};
+        }
+
+        this._headers = $.extend({}, this._headers, headers);
+
+        return this;
+    };
+
+    /**
+     * Executes a GET HTTP request using the configuration of this client instance.
+     * @param {string} url - The url where to send the HTTP request
+     * @param {Object} [query] - An object containing the query string parameters to be added to this request
+     * @param {Object} [headers] - An object containing the headers to be added to this this request
+     * @returns {Object} Returns a deferred Promise
+     */
     HttpClient.prototype.get = function(url, query, headers) {
         return HttpClient.get(
             formatUrl(url, this._configuration.strictSSL),
-            query,
-            createHeadersFromConfiguration(this._configuration, headers));
+            $.extend({}, this._query, query),
+            $.extend({}, this._headers, createHeadersFromConfiguration(this._configuration, headers)));
     };
 
+    /**
+     * Executes a POST HTTP request using the configuration of this client instance.
+     * @param {string} url - The url where to send the HTTP request
+     * @param {Object|*} [body] - The body (data) to be added to this request
+     * @param {Object} [headers] - An object containing the headers to be added to this request
+     * @returns {Object} - Returns a deferred Promise
+     */
     HttpClient.prototype.post = function(url, body, headers) {
         return HttpClient.post(
             formatUrl(url, this._configuration.strictSSL),
             body,
-            createHeadersFromConfiguration(this._configuration, headers));
+            $.extend({}, this._headers, createHeadersFromConfiguration(this._configuration, headers)));
     };
 
+    /**
+     * Executes a PUT HTTP request using the configuration of this client instance.
+     * @param {string} url - The url where to send the HTTP request
+     * @param {Object|*} [body] - The body (data) to be added to this request
+     * @param {Object} [headers] - An object containing the headers to be added to this request
+     * @returns {Object} - Returns a deferred Promise
+     */
     HttpClient.prototype.put = function(url, body, headers) {
         return HttpClient.put(
             formatUrl(url, this._configuration.strictSSL),
             body,
-            createHeadersFromConfiguration(this._configuration, headers));
+            $.extend({}, this._headers, createHeadersFromConfiguration(this._configuration, headers)));
     };
 
+    /**
+     * Executes a PATCH HTTP request using the configuration of this client instance.
+     * @param {string} url - The url where to send the HTTP request
+     * @param {Object|*} [body] - The body (data) to be added to this request
+     * @param {Object} [headers] - An object containing the headers to be added to this request
+     * @returns {Object} - Returns a deferred Promise
+     */
+    HttpClient.prototype.patch = function(url, body, headers) {
+        return HttpClient.patch(
+            formatUrl(url, this._configuration.strictSSL),
+            body,
+            $.extend({}, this._headers, createHeadersFromConfiguration(this._configuration, headers)));
+    };
+
+    /**
+     * Executes a DELETE HTTP request using the configuration of this client instance.
+     * @param {string} url - The url where to send the HTTP request
+     * @param {Object} [query] - An object containing the query string parameters to be added to this request
+     * @param {Object} [headers] - An object containing the headers to be added to this this request
+     * @returns {Object} Returns a deferred Promise
+     */
     HttpClient.prototype.del = function(url, query, headers) {
       return HttpClient.del(
           formatUrl(url, this._configuration.strictSSL),
-          query,
-          createHeadersFromConfiguration(this._configuration, headers));
+          $.extend({}, this._query, query),
+          $.extend({}, this._headers, createHeadersFromConfiguration(this._configuration, headers)));
     };
 
     /**
      * Executes a GET HTTP request
-     * @param url
-     * @param query
-     * @param headers
-     * @returns {Promise} Returns a deferred promise
+     * @param {string} url - The url where to send this GET HTTP request
+     * @param {Object} [query] - An object containing additional query string parameters to be added to this request.
+     * @param {Object} [headers] - An object containing additional headers to be added to this request
+     * @returns {Object} - Returns a deferred Promise
      */
     HttpClient.get = function (url, query, headers) {
-        var promise = $.ajax(url, {
+        return $.ajax(url, {
             data: query,
             headers: formatHeaders(headers)
-        });
-
-        promise.always(function () {
+        }).always(function () {
             console.log('[GET] ' + url, { url: url, query: query, headers: headers, args: arguments });
         });
-
-        return promise;
     };
 
     /**
      * Executes a POST HTTP request
-     * @param url
-     * @param body
-     * @param headers
-     * @returns {Promise} Returns a deferred promise
+     * @param {string} url - The url where to send the HTTP request
+     * @param {Object|*} [body] - The body (data) to be added to this request
+     * @param {Object} [headers] - An object containing the headers to be added to this request
+     * @returns {Object} - Returns a deferred Promise
      */
     HttpClient.post= function (url, body, headers) {
-        var promise = $.ajax({
+        return $.ajax({
             url: url,
             data: formatData(body),
             type: httpVerbs.POST,
@@ -1141,57 +1578,71 @@ define('everest/httpclient',[
         }).always(function () {
             console.log('[POST] ' + url, { url: url, data: body, headers: headers, args: arguments });
         });
-
-        return promise;
     };
 
     /**
      * Executes a PUT HTTP request
-     * @param url
-     * @param body
-     * @param headers
-     * @returns {Promise} Returns a deferred promise
+     * @param {string} url - The url where to send the HTTP request
+     * @param {Object|*} [body] - The body (data) to be added to this request
+     * @param {Object} [headers] - An object containing the headers to be added to this request
+     * @returns {Object} - Returns a deferred Promise
      */
     HttpClient.put = function (url, body, headers) {
-        var promise = $.ajax({
+        return $.ajax({
             url: url,
             data: formatData(body),
             type: httpVerbs.PUT,
             contentType: httpContentTypes.JSON,
             dataType: 'json',
             headers: formatHeaders(headers)
-        });
-        promise.always(function () {
+        }).always(function () {
             console.log('[PUT] ' + url, { url: url, data: body, headers: headers, args: arguments });
         });
-        return promise;
     };
 
     /**
      * Executes a DELETE HTTP request
-     * @param url
-     * @param query
-     * @param headers
-     * @returns {Promise} Returns a deferred promise
+     * @param {string} url - The url where to send this GET HTTP request
+     * @param {Object} [query] - An object containing additional query string parameters to be added to this request.
+     * @param {Object} [headers] - An object containing additional headers to be added to this request
+     * @returns {Object} - Returns a deferred Promise
      */
     HttpClient.del = function (url, query, headers) {
-        var promise = $.ajax({
+        return $.ajax({
             url: url,
             data: query,
             type: httpVerbs.DELETE,
             contentType: httpContentTypes.JSON,
             dataType: 'json',
             headers: formatHeaders(headers)
-        });
-        promise.always(function () {
+        }).always(function () {
             console.log('[DELETE] ' + url, { url: url, query: query, headers: headers, args: arguments });
         });
-        return promise;
+    };
+
+    /**
+     * Executes a PATCH HTTP request
+     * @param {string} url - The url where to send the HTTP request
+     * @param {Object|*} [body] - The body (data) to be added to this request
+     * @param {Object} [headers] - An object containing the headers to be added to this request
+     * @returns {Object} - Returns a deferred Promise
+     */
+    HttpClient.patch = function (url, body, headers) {
+        return $.ajax({
+            url: url,
+            data: formatData(body),
+            type: httpVerbs.PATCH,
+            contentType: httpContentTypes.JSON,
+            dataType: 'json',
+            headers: formatHeaders(headers)
+        }).always(function () {
+            console.log('[PATCH] ' + url, { url: url, data: body, headers: headers, args: arguments });
+        });
     };
 
     return HttpClient;
 });
-define('everest/restapiclient',[
+define('everest/restclient',[
     "jquery",
     "everest/constants",
     "everest/system",
@@ -1205,36 +1656,37 @@ define('everest/restapiclient',[
         dataFormats = constants.dataFormats,
         dataEncodings = constants.dataEncodings,
         defaultConfiguration = {
-        baseUrl: "",
-        dataFormat: dataFormats.JSON,
-        dataEncoding: constants.http.charsets.UTF8,
-        useCache: false,
-        strictSSL: false
-    };
+            host: "",
+            dataFormat: dataFormats.JSON,
+            dataEncoding: constants.http.charsets.UTF8,
+            useCache: true,
+            useSSL: false
+        };
 
-    function createHttpServiceConfiguration(restServiceConfiguration) {
-        if(!restServiceConfiguration) {
+    function createClientConfiguration(restClientConfiguration) {
+        if(!restClientConfiguration) {
             return {};
         }
         var httpServiceConfiguration = {};
-        if(restServiceConfiguration.dataFormat) {
+        if(restClientConfiguration.dataFormat) {
             httpServiceConfiguration["accept"] =
                 httpServiceConfiguration["contentType"]
-                    = dataFormatToHttpContentType(restServiceConfiguration.dataFormat);
+                    = dataFormatToHttpContentType(restClientConfiguration.dataFormat);
         }
-        if(restServiceConfiguration.dataEncoding) {
+        if(restClientConfiguration.dataEncoding) {
             httpServiceConfiguration["acceptCharset"] =
                 httpServiceConfiguration["contentTypeCharset"] =
-                    dataEncodingToHttpCharset(restServiceConfiguration.dataEncoding);
+                    dataEncodingToHttpCharset(restClientConfiguration.dataEncoding);
         }
-        if(restServiceConfiguration.useCache === true) {
+        if(restClientConfiguration.useCache === true) {
             httpServiceConfiguration["cache"] = true;
         }
-        if(restServiceConfiguration.strictSSL === true) {
+        if(restClientConfiguration.useSSL === true) {
             httpServiceConfiguration["strictSSL"] = true;
         }
         return httpServiceConfiguration;
     }
+
     function dataFormatToHttpContentType(dataFormat) {
         if(system.isEmpty(dataFormat)) {
             return httpContentTypes.JSON;
@@ -1251,9 +1703,17 @@ define('everest/restapiclient',[
                 return httpContentTypes.JSON;
         }
     }
+
     function dataEncodingToHttpCharset(dataEncoding) {
         // we only support UTF8 at this time being
         return httpCharsets.UTF8;
+    }
+
+    function createBaseUrl(host, useSSL) {
+        if(system.isEmpty(host) || system.stringContains(host, "http://") || system.stringContains(host, "https://")) {
+            return host;
+        }
+        return system.stringFormat("??", useSSL ? "https://" : "http://", system.stringTrim(host, "/"));
     }
 
     function createResourceUrl(baseUrl, path) {
@@ -1266,47 +1726,173 @@ define('everest/restapiclient',[
         );
     }
 
-    function RestApiClient(configuration) {
+    function validateConfiguration(configuration) {
+        // Do not process in ENV:DEBUG
+        if(system.isDebug() || system.isEmpty(configuration)) {
+            return;
+        }
+
+        if(!system.isObject(configuration)) {
+            console.warn("RestClient configuration is not an object", configuration);
+        }
+        Object.keys(configuration).forEach(function(element, index) {
+            if(system.isUndefined(defaultConfiguration[element])) {
+                console.warn("RestClient configuration key is not defined (name: %s)", element);
+            }
+        });
+        // @endif
+    }
+
+    /**
+     * Create a new RestClient
+     * @param {Object} [configuration] - The configuration to apply to the new RestClient instance
+     * @constructor
+     */
+    function RestClient(configuration) {
         this._initialize(configuration);
     }
 
-    RestApiClient.prototype.read = function(path, query) {
-        return this._httpService.get(
-            createResourceUrl(this._configuration.baseUrl, path),
+    /**
+     * Read a REST resource
+     * @access public
+     * @param {string} path - Path to the resource
+     * @param {Object} query - Additional query parameters to send with the request
+     * @returns {Promise} Returns a deferred Promise
+     */
+    RestClient.prototype.read = function(path, query) {
+        return this._httpClient.get(
+            createResourceUrl(createBaseUrl(this._configuration.host, this._configuration.useSSL), path),
             query);
     };
 
-    RestApiClient.prototype.create = function(path, data) {
-        return this._httpService.post(
-            createResourceUrl(this._configuration.baseUrl, path),
+    /**
+     * Create a new REST resource
+     * @access public
+     * @param {string} path - Path to the resource
+     * @param {Object} data - The data representation of the REST resource
+     * @returns {Promise} Returns a deferred Promise
+     */
+    RestClient.prototype.create = function(path, data) {
+        return this._httpClient.post(
+            createResourceUrl(createBaseUrl(this._configuration.host, this._configuration.useSSL), path),
             data);
     };
 
-    RestApiClient.prototype.update = function(path, data) {
-        return this._httpService.put(
-            createResourceUrl(this._configuration.baseUrl, path),
+    /**
+     * Update an existing REST resource
+     * @access public
+     * @param {string} path - Path to the resource
+     * @param {Object} data - The data representation of the REST resource
+     * @returns {Promise} Returns a deferred Promise
+     */
+    RestClient.prototype.update = function(path, data) {
+        return this._httpClient.put(
+            createResourceUrl(createBaseUrl(this._configuration.host, this._configuration.useSSL), path),
             data);
     };
 
-    RestApiClient.prototype.remove = function(path, query) {
-        return this._httpService.del(
-            createResourceUrl(this._configuration.baseUrl, path),
+    /**
+     * Delete a REST resource
+     * @access public
+     * @param {string} path - Path to the resource
+     * @param {Object} query - Additional query parameters to send with the request
+     * @returns {Promise} Returns a deferred Promise
+     */
+    RestClient.prototype.remove = function(path, query) {
+        return this._httpClient.del(
+            createResourceUrl(createBaseUrl(this._configuration.host, this._configuration.useSSL), path),
             query);
     };
 
-    RestApiClient.prototype.setConfiguration = function(configuration) {
-        this._configuration = $.extend({}, defaultConfiguration, configuration);
-    }
-    RestApiClient.prototype.getConfiguration = function() {
+    /**
+     * Partially update an existing REST resource
+     * @access public
+     * @param {string} path - Path to the resource
+     * @param {Object} data - The data representation of the REST resource
+     * @returns {Promise} Returns a deferred Promise
+     */
+    RestClient.prototype.partialUpdate = function(path, data) {
+      return this._httpClient.patch(
+          createResourceUrl(createBaseUrl(this._configuration.host, this._configuration.useSSL), path),
+          data);
+    };
+
+    /**
+     * Apply a new configuration to the current RestClient instance
+     * @access public
+     * @param {Object} configuration - The configuration to use to reconfigure the RestClient instance
+     * @returns {RestClient} Returns the current instance, allowing expression chaining.
+     */
+    RestClient.prototype.setConfiguration = function(configuration) {
+        validateConfiguration(configuration);
+        this._configuration = $.extend({}, defaultConfiguration, this._configuration, configuration);
+        return this;
+    };
+
+    /**
+     * Gets the configuration associated to the current RestClient instance
+     * @access public
+     * @returns {Object} Returns the configuration associated to the current RestClient instance
+     */
+    RestClient.prototype.getConfiguration = function() {
         return this._configuration;
-    }
+    };
 
-    RestApiClient.prototype._initialize = function(configuration) {
+    /**
+     * Add a query string parameter which will be used by the underlying HttpClient.
+     * @param {string} name - The name of the query string parameter
+     * @param {string} value - The value of the query string parameter
+     * @returns {RestClient} Returns the current RestClient instance, allowing expression chaining
+     */
+    RestClient.prototype.withQueryStringParam = function(name, value) {
+        this._httpClient.withQueryStringParam(name, value);
+        return this;
+    };
+
+    /**
+     * Add a set of query string parameters which will be used by the underlying HttpClient.
+     * @param {Object} params - An object containing the query string parameters to be added.
+     * @returns {RestClient} Returns the current RestClient instance, allowing expression chaining
+     */
+    RestClient.prototype.withQueryStringParams = function(params) {
+        this._httpClient.withQueryStringParams(params);
+        return this;
+    };
+
+    /**
+     * Adds an HTTP header which will be used by the underlying HttpClient
+     * @param {string} name - The name of the HTTP header
+     * @param {string} value - The value of the HTTP header
+     * @returns {RestClient} Returns the current RestClient instance, allowing expression chaining
+     */
+    RestClient.prototype.withHeader = function(name, value) {
+        this._httpClient.withHeader(name, value);
+        return this;
+    };
+
+    /**
+     * Adds a set of HTTP headers which will be used by the underlying HttpClient
+     * @param {Object} headers - An object containing the header to be added.
+     * @returns {RestClient} Returns the current RestClient instance, allowing expression chaining
+     */
+    RestClient.prototype.withHeaders = function(headers) {
+        this._httpClient.withHeaders(headers);
+        return this;
+    };
+
+    /**
+     * Initialize the current RestClient instance,
+     * that is, apply the new configuration and recreate a new instance of the
+     * underlying HttpClient
+     * @access private
+     * @param configuration
+     */
+    RestClient.prototype._initialize = function(configuration) {
         this.setConfiguration(configuration);
-        this._httpService = new HttpClient(createHttpServiceConfiguration(this._configuration));
-    }
+        this._httpClient = new HttpClient(createClientConfiguration(this._configuration));
+    };
 
-    return RestApiClient;
+    return RestClient;
 });
 /*global define */
 
@@ -1314,7 +1900,7 @@ define('everest/restapiclient',[
  * The main module that defines the public interface for EverestJs,
  * a REST Api client for the browser.
  */
-define('everest',['require','jquery','everest/constants','everest/system','everest/url','everest/httpclient','everest/restapiclient'],function (require) {
+define('everest',['require','jquery','everest/constants','everest/system','everest/url','everest/httpclient','everest/restclient'],function (require) {
     
 
     var $ = require("jquery"),
@@ -1322,7 +1908,7 @@ define('everest',['require','jquery','everest/constants','everest/system','evere
         system = require("everest/system"),
         URL = require("everest/url"),
         HttpClient = require("everest/httpclient"),
-        RestApiClient = require("everest/restapiclient");
+        RestClient = require("everest/restclient");
 
     // Public API
     return {
@@ -1330,7 +1916,24 @@ define('everest',['require','jquery','everest/constants','everest/system','evere
         system: system,
         URL: URL,
         HttpClient: HttpClient,
-        RestApiClient: RestApiClient
+        RestClient: RestClient,
+
+        /**
+         * Creates a new RestClient
+         * @param {*} configuration RestApi client configuration
+         */
+        createRestClient: function(configuration) {
+            return new RestClient(configuration);
+        },
+
+        /**
+         * Creates a new HttpClient
+         * @param configuration
+         * @returns {HttpClient}
+         */
+        createHttpClient: function(configuration) {
+          return new HttpClient(configuration);
+        }
     };
 });
     //Register in the values from the outer closure for common dependencies

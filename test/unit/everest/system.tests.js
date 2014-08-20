@@ -1,4 +1,4 @@
-define(["everest/system"], function (system) {
+define(["everest/constants", "everest/system"], function (constants, system) {
     describe("everest.system", function () {
         it("system exists", function () {
             expect(system).toBeDefined();
@@ -323,6 +323,23 @@ define(["everest/system"], function (system) {
                 expect(system.stringEndsWith("text", "te")).toBe(false);
                 expect(system.stringEndsWith("text", "xt")).toBe(true);
             });
+
+            it("stringContains should behave properly", function() {
+               expect(system.stringContains).toBeDefined();
+                expect(system.stringContains()).toBe(false);
+                expect(system.stringContains(null)).toBe(false);
+                expect(system.stringContains(null, null)).toBe(false);
+                expect(system.stringContains("value")).toBe(false);
+                expect(system.stringContains("value", null)).toBe(false);
+                expect(system.stringContains("value", undefined)).toBe(false);
+                expect(system.stringContains("value", "")).toBe(false);
+                expect(system.stringContains("value", 1)).toBe(false);
+                expect(system.stringContains("value1", "1")).toBe(true);
+                expect(system.stringContains("value1", 1)).toBe(true);
+                expect(system.stringContains("1value1", 1)).toBe(true);
+                expect(system.stringContains("1value", 1)).toBe(true);
+                expect(system.stringContains("value 1 ", 1)).toBe(true);
+            });
         });
 
         describe("everest.system.version", function () {
@@ -437,49 +454,49 @@ define(["everest/system"], function (system) {
 
             it("argumentIsNumber should behave properly", function () {
                 expect(function () {
-                    guard.argumentIsNumber(null, "argName")
+                    guard.argumentIsNumeric(null, "argName")
                 }).toThrow();
                 expect(function () {
-                    guard.argumentIsNumber(undefined, "argName")
+                    guard.argumentIsNumeric(undefined, "argName")
                 }).toThrow();
                 expect(function () {
-                    guard.argumentIsNumber("", "argName")
+                    guard.argumentIsNumeric("", "argName")
                 }).toThrow();
                 expect(function () {
-                    guard.argumentIsNumber("XE12", "argName")
+                    guard.argumentIsNumeric("XE12", "argName")
                 }).toThrow();
                 expect(function () {
-                    guard.argumentIsNumber("12", "argName")
+                    guard.argumentIsNumeric("12", "argName")
                 }).toThrow();
                 expect(function () {
-                    guard.argumentIsNumber(12, "argName")
+                    guard.argumentIsNumeric(12, "argName")
                 }).not.toThrow();
                 expect(function () {
-                    guard.argumentIsNumber(12.1, "argName")
+                    guard.argumentIsNumeric(12.1, "argName")
                 }).not.toThrow();
             });
 
-            it("argumentIsOptionalNumber should behave properly", function () {
+            it("argumentIsNumericOrUndefined should behave properly", function () {
                 expect(function () {
-                    guard.argumentIsOptionalNumber(null, "argName")
+                    guard.argumentIsNumericOrUndefined(null, "argName")
                 }).toThrow();
                 expect(function () {
-                    guard.argumentIsOptionalNumber("", "argName")
+                    guard.argumentIsNumericOrUndefined("", "argName")
                 }).toThrow();
                 expect(function () {
-                    guard.argumentIsOptionalNumber("XE12", "argName")
+                    guard.argumentIsNumericOrUndefined("XE12", "argName")
                 }).toThrow();
                 expect(function () {
-                    guard.argumentIsOptionalNumber("12", "argName")
+                    guard.argumentIsNumericOrUndefined("12", "argName")
                 }).toThrow();
                 expect(function () {
-                    guard.argumentIsOptionalNumber(undefined, "argName")
+                    guard.argumentIsNumericOrUndefined(undefined, "argName")
                 }).not.toThrow();
                 expect(function () {
-                    guard.argumentIsOptionalNumber(12, "argName")
+                    guard.argumentIsNumericOrUndefined(12, "argName")
                 }).not.toThrow();
                 expect(function () {
-                    guard.argumentIsOptionalNumber(12.1, "argName")
+                    guard.argumentIsNumericOrUndefined(12.1, "argName")
                 }).not.toThrow();
             });
 
@@ -537,6 +554,16 @@ define(["everest/system"], function (system) {
                     guard.argumentIsDefined(true);
                 }).not.toThrow();
             });
+        });
+
+        describe("everest.system.isDebug", function() {
+           it("should return true if in DEBUG mode", function() {
+               if(system.environment === constants.everest.environments.DEBUG) {
+                   expect(system.isDebug()).toBe(true);
+               } else {
+                   expect(system.isDebug()).toBe(false);
+               }
+           })
         });
     });
 });
