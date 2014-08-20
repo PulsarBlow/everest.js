@@ -1,4 +1,4 @@
-[![GitHub version](https://badge.fury.io/gh/pulsarblow%2Feverest.js.svg)](http://badge.fury.io/gh/pulsarblow%2Feverest.js)
+[![GitHub version](https://badge.fury.io/gh/PulsarBlow%2Feverest.js.svg)](http://badge.fury.io/gh/PulsarBlow%2Feverest.js)
 [![Bower version](https://badge.fury.io/bo/everest.svg)](http://badge.fury.io/bo/everest)
 [![Build Status](https://travis-ci.org/PulsarBlow/everest.js.svg?branch=master)](https://travis-ci.org/PulsarBlow/everest.js)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
