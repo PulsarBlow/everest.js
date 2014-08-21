@@ -212,6 +212,25 @@ header .navbar-default {
   background-color: #79bde0;
   color: #293540;
 }
+header .navbar-default .navbar-toggle,
+header .navbar-default .navbar-toggle:focus {
+  background-color: #293540;
+  border: 0;
+}
+header .navbar-default .navbar-toggle .icon-bar,
+header .navbar-default .navbar-toggle:focus .icon-bar {
+  background-color: #79bde0;
+}
+header .navbar-default .navbar-toggle:hover {
+  background-color: #ff530d;
+}
+header .navbar-default .navbar-toggle:hover .icon-bar {
+  background-color: #ffffff;
+}
+header .navbar-default .navbar-collapse,
+header .navbar-default .navbar-form {
+  border-color: #293540;
+}
 header .navbar-default .navbar-brand,
 header .navbar-default .navbar-nav > li > a {
   color: #293540;

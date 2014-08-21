@@ -41,6 +41,27 @@ header {
     background-color: @color-theme-2;
     color: @color-theme-1;
 
+    .navbar-toggle, .navbar-toggle:focus {
+      background-color: @color-theme-1;
+      border: 0;
+
+      .icon-bar {
+        background-color: @color-theme-2;
+      }
+    }
+
+    .navbar-toggle:hover {
+      background-color: @color-theme-3;
+
+      .icon-bar {
+        background-color: @color-theme-5;
+      }
+    }
+
+    .navbar-collapse, .navbar-form {
+      border-color:@color-theme-1;
+    }
+
     .navbar-brand, .navbar-nav > li > a {
       color: @color-theme-1;
 
