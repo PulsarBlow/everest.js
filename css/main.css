@@ -198,7 +198,7 @@ header .navbar-default {
 }
 header .navbar-default .navbar-brand,
 header .navbar-default .navbar-nav > li > a {
-  font-size: 1.25em;
+  font-size: 1.15em;
   color: #293540;
 }
 header .navbar-default .navbar-brand:hover,
@@ -230,6 +230,13 @@ footer ul li {
   padding-right: 3px;
   padding-left: 3px;
 }
+.logo-container {
+  width: 50%;
+  margin: auto;
+}
+svg.logo {
+  width: 100%;
+}
 svg.logo .mountain {
   fill: #ff530d;
 }
@@ -249,6 +256,9 @@ svg.logo .pike {
 }
 .jumbotron .btn-group {
   margin-top: 2em;
+}
+.jumbotron .jumbo-sub-header {
+  font-size: 1.5em;
 }
 .ribbon.ribbon-primary {
   background-color: #ff530d;
