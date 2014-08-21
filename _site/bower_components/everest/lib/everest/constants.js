@@ -39,7 +39,8 @@ define(function () {
                 USER_AGENT: "User-Agent",
                 ACCEPT: "Accept",
                 ACCEPT_CHARSET: "Accept-Charset",
-                HOST: "Host"
+                HOST: "Host",
+                RANGE: "Range"
             },
 
             verbs: {
@@ -48,7 +49,8 @@ define(function () {
                 PUT: "PUT",
                 DELETE: "DELETE",
                 HEAD: "HEAD",
-                MERGE: "MERGE"
+                MERGE: "MERGE",
+                PATCH: "PATCH"
             },
 
             statusCodes: {
@@ -96,6 +98,15 @@ define(function () {
                  */
                 NO_STORE: "no-store"
             }
+        },
+
+        everest: {
+            environments: {
+                DEBUG: "DEBUG",
+                RELEASE: "RELEASE"
+            },
+            USERAGENT_HEADER: "X-Alt-User-Agent",
+            USERAGENT_HEADER_FORMAT: "Everest.js/? (+https://github.com/PulsarBlow/everest.js)"
         }
     };
 

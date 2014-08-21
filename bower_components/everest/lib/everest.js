@@ -12,7 +12,7 @@ define(function (require) {
         system = require("everest/system"),
         URL = require("everest/url"),
         HttpClient = require("everest/httpclient"),
-        RestApiClient = require("everest/restapiclient");
+        RestClient = require("everest/restclient");
 
     // Public API
     return {
@@ -20,6 +20,23 @@ define(function (require) {
         system: system,
         URL: URL,
         HttpClient: HttpClient,
-        RestApiClient: RestApiClient
+        RestClient: RestClient,
+
+        /**
+         * Creates a new RestClient
+         * @param {*} configuration RestApi client configuration
+         */
+        createRestClient: function(configuration) {
+            return new RestClient(configuration);
+        },
+
+        /**
+         * Creates a new HttpClient
+         * @param configuration
+         * @returns {HttpClient}
+         */
+        createHttpClient: function(configuration) {
+          return new HttpClient(configuration);
+        }
     };
 });

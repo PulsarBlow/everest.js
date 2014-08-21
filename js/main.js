@@ -173,28 +173,22 @@
     function ViewModel() {
         this.everest = {
             version: ko.observable("0.0.0"),
-            release_url: ko.observable("https://github.com/PulsarBlow/everestjs/releases"),
-            download_url: ko.observable(""),
-            sourcecode_url: ko.observable("")
+            release_url: ko.observable("https://github.com/PulsarBlow/everest.js/releases"),
+            download_url: ko.observable("https://github.com/PulsarBlow/everest.js/releases"),
+            sourcecode_url: ko.observable("https://github.com/PulsarBlow/everest.js")
         };
 
         this._initialize();
     }
 
     ViewModel.prototype._initialize = function () {
-        //var that = this,
-        //    restApi = new ê.RestApiClient({baseUrl: "https://api.github.com"});
-
-//        restApi.read("repos/PulsarBlow/everestjs/releases")
-//            .done(function(data) {
-//                that.version(data[0].tag_name);
-//            });
         var that = this,
-            version = "0.0.0";
-        $.ajax('https://api.github.com/repos/PulsarBlow/everestjs/releases')
-            .done(function (data) {
+            restClient = ê.createRestClient({host: "api.github.com", useSSL: true});
+
+        restClient.read("repos/PulsarBlow/everest.js/releases")
+            .done(function(data) {
                 var releases = githubApi.models.Release.parseCollection(data),
-                    current = releases[releases.length - 1];
+                    current = releases[0];
 
                 that.everest.version(current.tag_name);
                 that.everest.release_url(current.urls.zipball);
@@ -204,9 +198,10 @@
     };
 
     $(document).ready(function () {
-        $('pre code').each(function(i, block) {
+        $('pre.highlight').each(function(i, block) {
             hljs.highlightBlock(block);
         });
+
         ko.applyBindings(new ViewModel());
     });
 }(window.jQuery, window.ko, window.ê);
