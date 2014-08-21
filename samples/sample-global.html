@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Simple AMD - Everest.js Samples</title>
+    <title>Simple Global - Everest.js Samples</title>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/lumen/bootstrap.min.css" rel="stylesheet">
@@ -22,18 +22,18 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/">Home</a></li>
                 <li><a href="/get-started.html">Get Started</a></li>
                 <li><a href="/download.html">Download</a></li>
                 <li><a href="/documentation.html">Documentation</a></li>
-                <li class="dropdown active">
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Samples <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li role="presentation" class="dropdown-header">Samples</li>
-                        <li role="presentation" class="divider"></li>
-                        <li><a href="/samples/simple-global.html">Simple Global</a></li>
-                        <li class="active"><a href="/samples/simple-amd.html">Simple AMD</a></li>
-                        <li><a href="/samples/explorer.html">RESTAPI Explorer</a></li>
+                        <li><a href="/samples">Samples</a></li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="/samples/sample-global.html">Simple Global</a></li>
+                        <li><a href="/samples/sample-amd.html">Simple AMD</a></li>
+                        <li><a href="/samples/_explorer.html">RESTAPI Explorer</a></li>
                     </ul>
                 </li>
             </ul>
@@ -72,7 +72,7 @@
                 <code>window.ê</code></p>
 
             <p>EverestJs is also usable as an AMD-module (with a module loader like <a href="http://requirejs.org">require.js</a>).
-                Check the <a href="simple-amd.html">Simple AMD</a> sample to see how it works.</p>
+                Check the <a href="sample-amd.html">Simple AMD</a> sample to see how it works.</p>
 
             <h3>What this sample demonstrates ?</h3>
 
@@ -93,15 +93,57 @@
 <script src="//oss.maxcdn.com/knockout/3.1.0/knockout.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="../dist/everest.min.js"></script>
 <script>
-    var require = {
-        paths: {
-            "jquery": "//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min",
-            "knockout": "//oss.maxcdn.com/knockout/3.1.0/knockout",
-            "everest": "../dist/everest"
+    (function ($, ko, ê) {
+        var defaultBaseUrl = "https://api.github.com",
+                defaultResourcePath = "/repos/PulsarBlow/everestjs",
+                $loader,
+                restApi = new ê.RestApiClient({
+                    baseUrl: defaultBaseUrl,
+                    useCache: true
+                });
+
+        function ViewModel() {
+            this.baseUrl = ko.observable(defaultBaseUrl);
+            this.resourcePath = ko.observable(defaultResourcePath);
+            this.result = ko.observable("");
         }
-    };
+
+        ViewModel.prototype.readResource = function () {
+            var that = this;
+
+            // Reset the baseUrl (in case your changed it in the input field)
+            restApi.setConfiguration({baseUrl: that.baseUrl()});
+
+            // Triggers the read and handles the outcome
+            $loader.removeClass("hidden");
+            restApi.read(that.resourcePath())
+                    .done(function (data) {
+                        that.result(JSON.stringify(data));
+                        console.log("ResApiClient read success", data);
+                        $('pre.highlight').each(function (i, block) {
+                            hljs.highlightBlock(block);
+                        });
+                    })
+                    .fail(function () {
+                        console.log("RestApiClient read fail", arguments);
+                    })
+                    .always(function () {
+                        console.log("RestApiClient read completed");
+                        $loader.addClass("hidden");
+                    });
+        };
+
+        $(document).ready(function () {
+            $loader = $("#loader");
+            // Databinds the viewModel. Just some Knockout stuff here, nothing related
+            // to EverestJs
+            ko.applyBindings(new ViewModel());
+            // Highlight code
+
+        });
+    })(window.jQuery = window.jQuery || {}, window.ko = window.ko || {}, window.ê = window.ê || {});
 </script>
-<script data-main="simple-amd.js" src="//oss.maxcdn.com/requirejs/2.1.14/require.min.js"></script>
 </body>
 </html>

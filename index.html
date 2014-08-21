@@ -15,10 +15,40 @@ title: Everest.js &sdot; A REST API javascript client for the browser
         </div>
         <h3>A REST API javascript client for the browser</h3>
         <div class="btn-group">
-            <a href="#" class="btn btn-lg btn-secondary" data-bind="attr: { href: everest.download_url}"><i class="fa fa-download"></i> Download Everest</a>
+            <a href="{{site.data.github.download_url}}" class="btn btn-lg btn-secondary"><i class="fa fa-download"></i> Download Everest</a>
         </div>
-        <h6 class="text-color-theme-5">Currently <strong>v<span data-bind="text: everest.version">0.0.0</span></strong></h6>
+        <h6 class="text-color-theme-5">Currently <strong>v<span>{{site.data.github.version}}</span></strong></h6>
     </div>
 </div>
 <div class="container">
+    <h2>How to use ?</h2>
+    <div>
+        <pre class="highlight javascript"><code>
+// Create a REST client
+var restClient = ê.createRestClient({ host: "api.github.com", useSSL: true })
+    .withHeader("Authorization", "token OAUTH-TOKEN")
+    .withQueryStringParam("page", 3);
+
+// Read a REST resource
+restClient.read("/repos/PulsarBlow/everest.js/releases")
+    .then(function(response) {
+        // Do something with the returned REST resource
+    }, function() {
+        // Handle the read failure
+    });
+
+// Partialy update a REST resource
+var partial = { name: "My super new roxing release name" };
+restClient.partialUpdate("/repos/PulsarBlow/everest.js/releases/123", partial);
+</code></pre>
+    </div>
+    <div class="alert alert-info">
+        <i class="fa fa-quote-left pull-left fa-border"></i>
+        <strong>Pro.tip</strong> Everest can be used as an AMD module with a module loader like <a href="http://requirejs.org">Require.js</a>. See the <a href="{{site.baseurl}}/samples/sample-amd.html">AMD sample for details</a>
+    </div>
+    <h2>What else ?</h2>
+    <div>
+        <p>Everest provides other usefull features such as a low level HttpClient, a URL parser, some type checkers, pre-conditions guards and other miscellaneous utility functions</p>
+        <p>Read the <a href="{{site.baseurl}}/documentation">documentation</a> for a complete API overview.</p>
+    </div>
 </div>

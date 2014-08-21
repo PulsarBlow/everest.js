@@ -6,6 +6,7 @@ title: Getting started &sdot; Everest.js
     <section class="page-header">
         <div class="container">
             <h1 class="page-title">Getting started</h1>
+
             <p class="lead">Once you've downloaded Everest, here's what to do next.</p>
         </div>
     </section>
@@ -14,57 +15,65 @@ title: Getting started &sdot; Everest.js
             <div class="row">
                 <div class="col-md-8">
                     <h1>Quick start</h1>
+
                     <p class="lead">Quickly get up and running with Everest</p>
-                    <p>Everest.js can be used as a global variable or an AMD module. Either way you first need to install the library in your page.</p>
+
+                    <p>Everest.js can be used as a global variable or an AMD module. Either way you first need to
+                        install the library in your page.</p>
+
                     <h3>Installation</h3>
                     <h4 class="text-color-theme-3">Manual install</h4>
-                    <p>Download Everest.min.js if, it's not already done, and reference it with jQuery in your page</p>
-                    <pre class="highlight">
-    &lt;script src="/path/to/jquery.min.js"&gt;&lt;/script&gt;
-    &lt;script src="/path/to/everest.min.js"&gt;&lt;/script&gt;</pre>
-                    <h4 class="text-color-theme-3">Bower install</h4>
-                    <p>Alternatively you can use <a href="http://bower.io">Bower</a> to download Everest.js</p>
-                    <pre class="highlight">
-    $ bower install everest</pre>
-                    <p>And then you reference jQuery and Everest from your bower_components path.</p>
-                    <pre class="highlight">
-    &lt;script src="bower_components/jquery/dist/jquery.min.js"&gt;&lt;/script&gt;
-    &lt;script src="bower_components/everest/dist/everest.min.js"&gt;&lt;/script&gt;</pre>
-                    <h3>Usage</h3>
-                    <p>Once loaded in your page, Everest exports itself as a global variable : <code>window.everest</code> or the cooler shortcut <code>window.ê</code></p>
-                    <h4 class="text-color-theme-3">REST Client</h4>
-                    <p>To start querying REST APIs, you need to create a REST client :</p>
-                    <pre class="highlight">
-    var restClient = ê.createRestClient({
-        host: "api.github.com",
-        useSSL: true            // Required by GitHub API
-    });
-                    </pre>
-                    <p>Once the REST client is created, you can start using it :</p>
-                    <pre class="highlight">
-    // Read a resource from your API
-    restClient.read("/repos/PulsarBlow/everest.js/releases")
-        .done(function(response) {
-            console.log("REST call succeeded", response);
-        })
-        .fail(function() {
-            console.log("REST call failed", arguments);
-        });
-                    </pre>
-                    <p>Or update your REST resource :</p>
-                    <pre class="highlight">
-    // Add authorization header for every requests.
-    restClient.withHeader("Authorization", "token OAUTH-TOKEN");
 
-    // Executes a partial update (PATCH) as required by GitHub API
-    restClient.partialUpdate("/repos/PulsarBlow/releases/504659", {
-        name: "New name for my release tag"
-    }).done(function(response) {
+                    <p>Download Everest.min.js if, it's not already done, and reference it with jQuery in your page</p>
+                    <pre><code>&lt;script src="/path/to/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="/path/to/everest.min.js"&gt;&lt;/script&gt;</code></pre>
+                    <h4 class="text-color-theme-3">Bower install</h4>
+
+                    <p>Alternatively you can use <a href="http://bower.io">Bower</a> to download Everest.js</p>
+                    <pre><code>$bower install everest</code></pre>
+                    <p>And then you reference jQuery and Everest from your bower_components path.</p>
+                    <pre><code>&lt;script src="bower_components/jquery/dist/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="bower_components/everest/dist/everest.min.js"&gt;&lt;/script&gt;</code></pre>
+                    <h3>Usage</h3>
+
+                    <p>Once loaded in your page, Everest exports itself as a global variable :
+                        <code>window.everest</code> or the cooler shortcut <code>window.ê</code></p>
+                    <h4 class="text-color-theme-3">REST Client</h4>
+
+                    <p>To start querying REST APIs, you need to create a REST client :</p>
+                    <pre>
+<code>// Create a new RestClient. See below for options.
+var restClient = ê.createRestClient({
+    host: "api.github.com", // required
+    useSSL: true
+});</code></pre>
+                    <p>Once the REST client is created, you can start using it :</p>
+                    <pre>
+<code>// Fetch releases from Everest.js github repository
+restClient.read("/repos/PulsarBlow/everest.js/releases")
+    .done(function(response) {
         console.log("REST call succeeded", response);
-    }).fail(function() {
+    })
+    .fail(function() {
         console.log("REST call failed", arguments);
-    });
-                    </pre>
+    });</code></pre>
+                    <p>Or update your REST resource :</p>
+                    <pre>
+<code>// To update github api releases, you must be authenticated
+
+// Add authorization header for every requests.
+restClient.withHeader("Authorization", "token OAUTH-TOKEN");
+
+// Execute a partial update (PATCH) as required by GitHub API to update releases
+restClient.partialUpdate("/repos/PulsarBlow/releases/504659", {
+    name: "New name for my release tag"
+})
+    .done(function(response) {
+        console.log("REST call succeeded", response);
+    })
+    .fail(function() {
+        console.log("REST call failed", arguments);
+    });</code></pre>
                     <p>And so on... The REST client supports :</p>
                     <ul>
                         <li>Resource read (GET) : <code>restClient.read(...)</code></li>
@@ -99,7 +108,7 @@ title: Getting started &sdot; Everest.js
                             <td>string</td>
                             <td></td>
                             <td>json</td>
-                            <td>json, xml, atom, </td>
+                            <td>json, xml, atom,</td>
                             <td>Data exchange format (content-type)</td>
                         </tr>
                         <tr>
@@ -128,26 +137,34 @@ title: Getting started &sdot; Everest.js
                         </tr>
                         </tbody>
                     </table>
-                    <h3>And more...</h3>
-                    <p>Everest provides much more features than a REST client. Read the <a href="{{site.baseurl}}/documentation">documentation</a> for a complete features overview</p>
+                    <h3>And much more...</h3>
+
+                    <p>Everest provides much more useful REST and HTTP features.<br />Read the <a
+                            href="{{site.baseurl}}/documentation">documentation</a> for a complete features overview.</p>
                 </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <h2>Everest.min.js</h2>
+
                             <p>Compiled and minified JavaScript. No docs or original source files are included.</p>
+
                             <div class="">
-                                <a href="#" class="btn btn-lg btn-block btn-primary" data-bind="attr: { href: everest.download_url}"><i class="fa fa-download"></i> Download Everest</a>
+                                <a href="{{site.data.github.download_url}}" class="btn btn-lg btn-block btn-primary"><i class="fa fa-download"></i>
+                                    Download Everest</a>
                             </div>
-                            <h6 class="">Currently <strong>v<span data-bind="text: everest.version">0.0.0</span></strong></h6>
+                            <h6 class="">Currently <strong>v<span>{{site.data.github.version}}</span></strong></h6>
                         </div>
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <h2>Source code</h2>
+
                             <p>If you haven't already, download the source code for Everest.</p>
+
                             <div class="">
-                                <a href="#" class="btn btn-lg btn-block btn-primary" data-bind="attr: { href: everest.sourcecode_url}"><i class="fa fa-download"></i> Source code</a>
+                                <a href="{{site.data.github.sourcecode_url}}" class="btn btn-lg btn-block btn-primary"><i class="fa fa-download"></i>
+                                    Source code</a>
                             </div>
                         </div>
                     </div>

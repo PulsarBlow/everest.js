@@ -170,38 +170,23 @@
       return parseModelCollection(githubApi.models.Release, dataCollection);
     };
 
-    function ViewModel() {
-        this.everest = {
-            version: ko.observable("0.0.0"),
-            release_url: ko.observable("https://github.com/PulsarBlow/everest.js/releases"),
-            download_url: ko.observable("https://github.com/PulsarBlow/everest.js/releases"),
-            sourcecode_url: ko.observable("https://github.com/PulsarBlow/everest.js")
-        };
-
-        this._initialize();
-    }
-
-    ViewModel.prototype._initialize = function () {
-        var that = this,
-            restClient = ê.createRestClient({host: "api.github.com", useSSL: true});
-
-        restClient.read("repos/PulsarBlow/everest.js/releases")
-            .done(function(data) {
-                var releases = githubApi.models.Release.parseCollection(data),
-                    current = releases[0];
-
-                that.everest.version(current.tag_name);
-                that.everest.release_url(current.urls.zipball);
-                that.everest.download_url(current.assets[0].urls.browser_download);
-                that.everest.sourcecode_url(current.urls.zipball);
-            });
-    };
-
     $(document).ready(function () {
-        $('pre.highlight').each(function(i, block) {
+        hljs.configure({tabReplace: "    ", languages: ["bash", "html", "js"]});
+        $('pre code').each(function(i, block) {
             hljs.highlightBlock(block);
         });
-
-        ko.applyBindings(new ViewModel());
+        Holder.run({
+            domain: "everest.js",
+            themes: {
+                "theme1": {
+//                    background: "#293540",
+//                    foreground: "E1EBF5",
+//                    size: 11
+                    background: "#79BDE0",
+                    foreground: "#293540",
+                    size: 11
+                }
+            }
+        })
     });
 }(window.jQuery, window.ko, window.ê);

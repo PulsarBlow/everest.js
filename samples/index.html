@@ -1,112 +1,50 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Simple Test - EverestJs Samples</title>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-    <!--<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css" rel="stylesheet">-->
-</head>
-<body>
-<div class="container">
-    <div class="col-md-8 col-md-offset-2">
-        <h1 class="page-header">Simple Test
-            <small>EverestJs samples</small>
-        </h1>
-        <p>This sample is demonstrating how to use Everest REST API client in the browser, using the non-AMD module way
-            (old-school fashion global variable).</p>
+---
+layout: default
+title: Samples &sdot; Everest.js
+---
+<div class="page">
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Samples</h1>
 
-        <p>EverestJs is also usable as an AMD-module (with a module loader like <a href="http://requirejs.org">require.js</a>).</p>
-
-        <p>Check the <a href="explorer.html">RESTAPI Explorer</a> sample to see how it works.</p>
-
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <i class="fa fa fa-lightbulb-o pull-left fa-border"></i>EverestJs <strong>global variable</strong> name is : <code>window.<strong>ê</strong></code> or <code>window.<strong>everest</strong></code><br />You can use both. But <code>ê</code> is much cooler, isn't it ?
+            <p class="lead">Learn using complete implementations</p>
+        </div>
+    </section>
+    <section class="page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img data-src="holder.js/300x300" alt="...">
+                        <div class="caption">
+                            <h3>Thumbnail label</h3>
+                            <p>...</p>
+                            <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img data-src="holder.js/300x300" alt="...">
+                        <div class="caption">
+                            <h3>Thumbnail label</h3>
+                            <p>...</p>
+                            <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <img data-src="holder.js/300x300" alt="...">
+                        <div class="caption">
+                            <h3>Thumbnail label</h3>
+                            <p>...</p>
+                            <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <h3>RestApi Client</h3>
 
-        <p>The RestApi client is a high level RESTful abstraction: <code>ê.RestApiService</code></p>
-        <strong>Create a new client instance</strong>
-<pre>
-var restApi = new ê.RestApiService({
-
-    // required - Base url of your REST Api
-    baseUrl: "https://api.github.com",
-
-    // optional - Data format (aka content-type)
-    dataFormat: "json",     // ("json" | "xml" | "atom" | "form") - default : "json",
-
-    // optional - Data encoding (aka charset)
-    dataEncoding: "utf-8", // default: "utf-8",
-
-    // optional - Should GET and HEAD requests be cached by the browser ?
-    useCache: false,        // (true | false) - default: false
-
-    // optional - Force the client to communicate in HTTPS only, whatever protocol is
-    // provided in baseUrl
-    strictSSL: false        // (true | false)  - default: false
-});
-</pre>
-        <table>
-            <thead>
-
-            </thead>
-        </table>
-        <strong>Read a resource</strong>
-<pre>//
-restApi.read("/repos/PulsarBlow/everestjs")
-.done(function(data) {
-    console.log("restApi response", data);
-})
-.fail(function() {
-    console.log("restApi response failed", arguments);
-})
-.always(function() {
-    console.log("resApi call completed");
-});
-</pre>
-        <h3>Http Client</h3>
-        <p>The RestApi client uses this Http abstraction to execute low level HTTP requests.</p>
-        <p>The HttpClient is also part of the public API, so you can use it for any purpose: <code>ê.HttpService</code></p>
-        <p>You can either use it as an instance or with its static methods.</p>
-<pre>
-// Everest provides predefined constants you can use.
-var contentTypes = ê.constants.http.contentTypes;
-var charsets = ê.constants.http.charsets;
-
-// Use the constructor function to provide your configuration
-var httpClient = new ê.HttpClient({
-
-    // Define the "Accept" HTTP header for all your requests
-    accept: contentTypes.JSON,
-
-    // Defines the "Accept-Charset" HTTP header for all your requests
-    acceptCharset: charsets.UTF8,
-
-    // Defines the "Content-Type" HTTP header for all your requests
-    contentType: contentTypes.JSON,
-
-    // Defines the charset which will be appended to your "Content-Type" HTTP header
-    // eg: application/json; charset=utf-8
-    contentTypeCharset: charsets.UTF8,
-
-    // Should GET and HEAD requests cached by the browser ?
-    cache: false,
-
-    // All request will be made over HTTPS only
-    strictSSL: false    // (true | false) - default: false
-});
-</pre>
-    </div>
+    </section>
 </div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="../dist/everest.min.js"></script>
-<script>
-    $(document).ready(function () {
-
-    });
-</script>
-</body>
-</html>

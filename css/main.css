@@ -14,6 +14,7 @@ h2,
 h3,
 h4 {
   font-family: 'Teko', sans-serif;
+  color: #293540;
 }
 .text-color-theme-1 {
   color: #293540;
@@ -36,6 +37,10 @@ h4 {
   border: 0;
   color: #ffffff;
 }
+.btn-primary:active,
+.btn-primary:visited {
+  color: #ffffff;
+}
 .btn-primary:hover,
 .btn-primary:focus {
   background-color: #d93f00;
@@ -47,10 +52,24 @@ h4 {
   border: 0;
   color: #e1ebf5;
 }
+.btn-secondary:active,
+.btn-secondary:visited {
+  color: #e1ebf5;
+}
 .btn-secondary:hover,
 .btn-secondary:focus {
   background-color: #50a9d6;
   color: #e1ebf5;
+}
+.alert-info {
+  color: #e1ebf5;
+  background-color: #293540;
+  border-color: #293540;
+}
+.alert-info .fa,
+.alert-info .fa-border {
+  color: #ff530d;
+  border-color: #ff530d;
 }
 /*
 
@@ -167,11 +186,8 @@ html {
   min-height: 100%;
 }
 body {
-  margin-bottom: 100px;
-}
-body.home {
-  color: #e1ebf5;
-  background-color: #293540;
+  margin-bottom: 150px;
+  background-color: #e1ebf5;
 }
 a {
   color: #79bde0;
@@ -198,7 +214,6 @@ header .navbar-default {
 }
 header .navbar-default .navbar-brand,
 header .navbar-default .navbar-nav > li > a {
-  font-size: 1.15em;
   color: #293540;
 }
 header .navbar-default .navbar-brand:hover,
@@ -209,7 +224,18 @@ header .navbar-default .navbar-nav > li > a:focus {
 }
 header .navbar-default .navbar-brand {
   font-family: 'Teko', sans-serif;
+  font-size: 1.25em;
   font-weight: 600;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+  background-color: #79bde0;
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background-color: #b7dcee;
+  color: #ffffff;
 }
 footer {
   position: absolute;
@@ -217,6 +243,8 @@ footer {
   bottom: 0;
   left: 0;
   height: 100px;
+  color: #e1ebf5;
+  background-color: #293540;
   text-align: center;
 }
 footer .footer-text {
@@ -229,19 +257,6 @@ footer ul li {
   display: inline;
   padding-right: 3px;
   padding-left: 3px;
-}
-.logo-container {
-  width: 50%;
-  margin: auto;
-}
-svg.logo {
-  width: 100%;
-}
-svg.logo .mountain {
-  fill: #ff530d;
-}
-svg.logo .pike {
-  fill: #ffffff;
 }
 .jumbotron {
   background-color: #293540;
@@ -260,6 +275,19 @@ svg.logo .pike {
 .jumbotron .jumbo-sub-header {
   font-size: 1.5em;
 }
+.logo-container {
+  width: 50%;
+  margin: auto;
+}
+svg.logo {
+  width: 100%;
+}
+svg.logo .mountain {
+  fill: #ff530d;
+}
+svg.logo .pike {
+  fill: #ffffff;
+}
 .ribbon.ribbon-primary {
   background-color: #ff530d;
   color: #e1ebf5;
@@ -271,6 +299,9 @@ svg.logo .pike {
 .ribbon.ribbon-ternary {
   background-color: #293540;
   color: #ff530d;
+}
+.home footer {
+  background-color: #293540;
 }
 .page .page-header {
   margin: 0;

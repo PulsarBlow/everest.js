@@ -3,6 +3,7 @@
 @import "fonts";
 @import "typo";
 @import "buttons";
+@import "alerts";
 @import "syntax";
 
 html {
@@ -12,11 +13,8 @@ html {
 
 body {
   //.base-font;
-  margin-bottom: @footer-height;
-  &.home {
-    color: @color-theme-4;
-    background-color: @color-theme-1;
-  }
+  margin-bottom: @footer-height + (@footer-height/2);
+  background-color: @color-theme-4;
 }
 
 a {
@@ -44,7 +42,6 @@ header {
     color: @color-theme-1;
 
     .navbar-brand, .navbar-nav > li > a {
-      font-size: 1.15em;
       color: @color-theme-1;
 
       &:hover, &:focus {
@@ -55,9 +52,17 @@ header {
 
     .navbar-brand {
       .open-font;
+      font-size: 1.25em;
       font-weight: 600;
     }
   }
+}
+.nav-pills > li.active > a, .nav-pills > li.active >a:hover, .nav-pills>li.active>a:focus {
+  background-color: @color-theme-2;
+}
+.nav>li>a:hover, .nav>li>a:focus {
+  background-color: lighten(@color-theme-2, 15%);
+  color: @color-theme-5;
 }
 
 // Footer
@@ -67,7 +72,8 @@ footer {
   bottom: 0;
   left: 0;
   height: @footer-height;
-
+  color: @color-theme-4;
+  background-color: @color-theme-1;
   text-align: center;
 
   .footer-text {
@@ -81,20 +87,6 @@ footer {
       padding-right: 3px;
       padding-left: 3px;
     }
-  }
-}
-.logo-container {
-  width: 50%;
-  margin:auto;
-}
-
-svg.logo {
-  width: 100%;
-  .mountain {
-    fill: @color-theme-3;
-  }
-  .pike {
-    fill: @color-theme-5;
   }
 }
 
@@ -115,7 +107,22 @@ svg.logo {
 
   }
   .jumbo-sub-header {
-    font-size:1.5em;
+    font-size: 1.5em;
+  }
+}
+
+.logo-container {
+  width: 50%;
+  margin: auto;
+}
+
+svg.logo {
+  width: 100%;
+  .mountain {
+    fill: @color-theme-3;
+  }
+  .pike {
+    fill: @color-theme-5;
   }
 }
 
@@ -132,6 +139,15 @@ svg.logo {
   &.ribbon-ternary {
     background-color: @color-theme-1;
     color: @color-theme-3;
+  }
+}
+
+// Home related
+.home {
+  h3 {
+  }
+  footer {
+    background-color: @color-theme-1;
   }
 }
 
