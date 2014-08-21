@@ -62,5 +62,5 @@ node_modules
 # Do not store jekyll generation
 _site
 # Do not ignore everest bower
-bower_components/jquery
+!bower_components/jquery/**
 !bower_components/everest/**
