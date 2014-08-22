@@ -1,54 +1,93 @@
 ---
-layout: default
-body_class: "home"
-title: Everest.js &sdot; A REST API javascript client for the browser
+title: Everest.js - A REST API javascript client for the browser
 ---
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="6; url=http://pulsarblow.github.io/everest">
+    <title>{{page.title}}</title>
+    <link rel="shortcut icon" type="image/png" href="{{site.baseurl}}/images/favicon.png"/>
+    <link href='http://fonts.googleapis.com/css?family=Spinnaker&subset=latin,latin-ext' rel='stylesheet'
+          type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Teko:300,400,500,600,700' rel='stylesheet' type='text/css'>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{site.baseurl}}/css/main.min.css">
+</head>
+<body>
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
 
 <div class="jumbotron">
     <div class="container">
         <h1 class="jumbo-header">EVEREST.JS</h1>
         <div class="logo-container">
             <svg version="1.1" class="logo" viewBox="0 0 512 320">
-<polygon class="mountain" points="0,320 320,320 160,96 "/>
-<polygon class="pike" points="288,0 210.301,111.344 359.344,320 512,320 "/>
-</svg>
+                <polygon class="mountain" points="0,320 320,320 160,96 "/>
+                <polygon class="pike" points="288,0 210.301,111.344 359.344,320 512,320 "/>
+            </svg>
         </div>
         <h3>A REST API javascript client for the browser</h3>
-        <div class="btn-group">
-            <a href="{{site.data.github.download_url}}" class="btn btn-lg btn-secondary"><i class="fa fa-download"></i> Download Everest</a>
-        </div>
-        <h6 class="text-color-theme-5">Currently <strong>v<span>{{site.data.github.version}}</span></strong></h6>
     </div>
 </div>
-<div class="container">
-    <h2>How to use ?</h2>
-    <div>
-        <pre class="highlight javascript"><code>
-// Create a REST client
-var restClient = ê.createRestClient({ host: "api.github.com", useSSL: true })
-    .withHeader("Authorization", "token OAUTH-TOKEN")
-    .withQueryStringParam("page", 3);
+<footer>
+    <h1>Website has moved!</h1>
+    <p>You will be automatically redirected to the new address in <strong class="label label-danger"><span data-bind="text: secondsLeft">5</span> sec</strong></p>
+    <h3><a href="http://pulsarblow.github.io/everest">http://pulsarblow.github.io/everest</a></h3>
+</footer>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-2.1.1.min.js"><\/script>')</script>
+<script src="//oss.maxcdn.com/knockout/3.1.0/knockout.js"></script>
+<script>window.ko || document.write('<script src="js/vendor/knockout-3.1.0.min.js"><\/script>')</script>
+<script>
+    !function($, ko) {
+        var seconds = ko.observable(5);
+        var vm = {
+            secondsLeft: seconds,
+            runCountdown: function() {
+                setInterval(function(){
+                    var left = seconds() - 1;
+                    if(left <= 0) {
+                        window.location = "http://pulsarblow.github.io/everest";
+                    }
+                    seconds(left);
+                }, 1000)
+            }
+        }
+        $(document).ready(function() {
+           ko.applyBindings(vm);
+            vm.runCountdown();
+        });
+    }(window.jQuery, window.ko);
+</script>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-// Read a REST resource
-restClient.read("/repos/PulsarBlow/everest.js/releases")
-    .then(function(response) {
-        // Do something with the returned REST resource
-    }, function() {
-        // Handle the read failure
-    });
-
-// Partialy update a REST resource
-var partial = { name: "My super new roxing release name" };
-restClient.partialUpdate("/repos/PulsarBlow/everest.js/releases/123", partial);
-</code></pre>
-    </div>
-    <div class="alert alert-info">
-        <i class="fa fa-quote-left pull-left fa-border"></i>
-        <strong>Pro.tip</strong> Everest can be used as an AMD module with a module loader like <a href="http://requirejs.org">Require.js</a>. See the <a href="{{site.baseurl}}/samples/sample-amd.html">AMD sample for details</a>
-    </div>
-    <h2>What else ?</h2>
-    <div>
-        <p>Everest provides other usefull features such as a low level HttpClient, a URL parser, some type checkers, pre-conditions guards and other miscellaneous utility functions</p>
-        <p>Read the <a href="{{site.baseurl}}/documentation">documentation</a> for a complete API overview.</p>
-    </div>
-</div>
+    ga('create', 'UA-41236726-5', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>

@@ -2,9 +2,6 @@
 @import "mixins";
 @import "fonts";
 @import "typo";
-@import "buttons";
-@import "alerts";
-@import "syntax";
 
 html {
   position: relative;
@@ -12,9 +9,8 @@ html {
 }
 
 body {
-  //.base-font;
-  margin-bottom: @footer-height + (@footer-height/2);
-  background-color: @color-theme-4;
+  .base-font;
+  background-color: @color-theme-1;
 }
 
 a {
@@ -23,94 +19,6 @@ a {
     color: @color-theme-2;
   }
 }
-
-// Header
-header {
-  z-index: 1000;
-  position: relative;
-  width: 100%;
-
-  .navbar {
-    margin: 0;
-  }
-
-  // Navigation
-  .navbar-default {
-    border: none;
-    border-radius: 0;
-    background-color: @color-theme-2;
-    color: @color-theme-1;
-
-    .navbar-toggle, .navbar-toggle:focus {
-      background-color: @color-theme-1;
-      border: 0;
-
-      .icon-bar {
-        background-color: @color-theme-2;
-      }
-    }
-
-    .navbar-toggle:hover {
-      background-color: @color-theme-3;
-
-      .icon-bar {
-        background-color: @color-theme-5;
-      }
-    }
-
-    .navbar-collapse, .navbar-form {
-      border-color:@color-theme-1;
-    }
-
-    .navbar-brand, .navbar-nav > li > a {
-      color: @color-theme-1;
-
-      &:hover, &:focus {
-        color: @color-theme-4;
-      }
-
-    }
-
-    .navbar-brand {
-      .open-font;
-      font-size: 1.25em;
-      font-weight: 600;
-    }
-  }
-}
-.nav-pills > li.active > a, .nav-pills > li.active >a:hover, .nav-pills>li.active>a:focus {
-  background-color: @color-theme-2;
-}
-.nav>li>a:hover, .nav>li>a:focus {
-  background-color: lighten(@color-theme-2, 15%);
-  color: @color-theme-5;
-}
-
-// Footer
-footer {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: @footer-height;
-  color: @color-theme-4;
-  background-color: @color-theme-1;
-  text-align: center;
-
-  .footer-text {
-    margin-top: 1em;
-    .center-block;
-  }
-
-  ul {
-    li {
-      display: inline;
-      padding-right: 3px;
-      padding-left: 3px;
-    }
-  }
-}
-
 // Jumbotron
 .jumbotron {
   background-color: @color-theme-1;
@@ -133,7 +41,7 @@ footer {
 }
 
 .logo-container {
-  width: 50%;
+  width: 15%;
   margin: auto;
 }
 
@@ -147,53 +55,27 @@ svg.logo {
   }
 }
 
+// Footer
+// Footer
+footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 60%;
+  color: @color-theme-1;
+  background-color: @color-theme-2;
+  text-align: center;
+  a, a:hover, a:active, a:focus, a:visited {
+    color: @color-theme-1;
+    text-decoration: underline;
+  }
+}
 // Ribbons
 .ribbon {
-  &.ribbon-primary {
-    background-color: @color-theme-3;
-    color: @color-theme-4;
-  }
-  &.ribbon-secondary {
-    background-color: @color-theme-2;
-    color: @color-theme-1;
-  }
-  &.ribbon-ternary {
-    background-color: @color-theme-1;
-    color: @color-theme-3;
-  }
-}
-
-// Home related
-.home {
-  h3 {
-  }
-  footer {
-    background-color: @color-theme-1;
-  }
-}
-
-// Page
-.page {
-  .page-header {
-    margin: 0;
-    padding: 3em 0 2em 0;
-    background-color: @color-theme-1;
-    color: @color-theme-5;
-
-    .page-title {
-      margin: 0;
-      padding: 0;
-      color: @color-theme-3;
-    }
-
-    .lead {
-      color: @color-theme-4;
-    }
-  }
-
-  .page-content {
-    padding: 2em 0;
-  }
+  background-color: @color-theme-2;
+  color: @color-theme-1;
+  padding: 4em 0;
 }
 
 // Misc.

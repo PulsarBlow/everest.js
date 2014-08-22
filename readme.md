@@ -1,5 +1,5 @@
 # EverestJs website
 
-This is the presentation website for Everest.js  
+### Everest.js website has moved !  
 
-https://pulsarblow.github.io/everest.js
+### http://pulsarblow.github.io/everest
