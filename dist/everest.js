@@ -1,7 +1,7 @@
 /*!
  * Everest JS - A REST Api client for the browser.
  * Version, see : everest.system.version
- * http://github.com/PulsarBlow/EverestJs
+ * http://github.com/PulsarBlow/everest.js
  */
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
@@ -56,7 +56,7 @@ var requirejs, require, define;
         if (name && name.charAt(0) === ".") {
             //If have a base name, try to normalize against it,
             //otherwise, assume it is a top-level require that will
-            //be relative to host in the end.
+            //be relative to baseUrl in the end.
             if (baseName) {
                 //Convert baseName to array, and lop off the last part,
                 //so that . matches that "directory" and not name of the baseName's
@@ -100,7 +100,7 @@ var requirejs, require, define;
                 name = name.join("/");
             } else if (name.indexOf('./') === 0) {
                 // No baseName, so this is ID is resolved relative
-                // to host, pull off the leading dot.
+                // to baseUrl, pull off the leading dot.
                 name = name.substring(2);
             }
         }
@@ -873,7 +873,7 @@ define('everest/system',["jquery", "everest/constants"], function ($, constants)
      * The current version of Everest.js
      * @type {string}
      */
-    var version = "1.1.0-alpha";
+    var version = "1.1.1-alpha";
 
     /**
      * Returns the current environment
